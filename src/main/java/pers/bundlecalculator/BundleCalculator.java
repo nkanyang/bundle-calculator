@@ -8,6 +8,14 @@ import java.util.HashMap;
 
 public class BundleCalculator {
     private HashMap<String, IBundleProcessor> bundlesProcessors = new HashMap<>();
+
+    public boolean addBundleProcessor(String formatCode, String submissionItem){
+
+        System.out.println(formatCode);
+        System.out.println(submissionItem);
+        //Todo: parse bundle string
+        return true;
+    }
     public boolean addBundleProcessor(String formatCode, GreedyBundleProcessor processor){
         this.bundlesProcessors.put(formatCode, processor);
         return true;
