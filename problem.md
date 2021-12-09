@@ -13,10 +13,10 @@ Video | VID | 3 @ $570 5 @ $900 9 @ $1530
 
 ## Task
 
-Given a brands order, you are required to determine the cost and bundle breakdown for each submission format. For simplicity, each order should contain the minimal number of bundles.
+Given a brands orderItem, you are required to determine the cost and bundle breakdown for each submission format. For simplicity, each orderItem should contain the minimal number of bundles.
 
 ### Input:
-Each order has a series of lines with each line containing the number of items followed by the submission format code
+Each orderItem has a series of lines with each line containing the number of items followed by the submission format code
 An example input:
 ```
 10 IMG
