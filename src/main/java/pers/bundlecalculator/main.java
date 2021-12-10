@@ -1,6 +1,8 @@
 package pers.bundlecalculator;
 
 import pers.bundlecalculator.model.Bundle;
+import pers.bundlecalculator.model.OrderItem;
+import pers.bundlecalculator.model.Output;
 
 public class main {
     public static void main(String[] args){
@@ -8,6 +10,7 @@ public class main {
         System.out.println(System.getProperty("user.dir"));
         BundleLoader loader = new BundleLoader();
         BundleCalculator calculator = loader.loadCalculator("sampledata/bundle.csv");
+        calculator.processOrder(new OrderItem(13, "IMG"));
     }
 
     public static void showHelpInfo() { //todo: Update
