@@ -1,5 +1,6 @@
 package pers.bundlecalculator;
 
+import pers.bundlecalculator.exception.FormatNotSupportException;
 import pers.bundlecalculator.model.OrderItem;
 import pers.bundlecalculator.model.Output;
 import pers.bundlecalculator.model.OutputItem;
@@ -15,8 +16,11 @@ public class BundleCalculator {
         this.bundlesProcessors.put(formatCode, processor);
         return true;
     }
-    public void processOrder(OrderItem orderItem){
+    public void processOrder(OrderItem orderItem) throws FormatNotSupportException{
         IBundleProcessor processor = this.bundlesProcessors.get(orderItem.getFormatCode());
+        if(processor == null){
+            throw new FormatNotSupportException("Format " + orderItem.getFormatCode() + " not supported!");
+        }
         Output output = processor.processOrder(orderItem);
         System.out.println(output);
     }

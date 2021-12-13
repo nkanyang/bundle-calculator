@@ -6,9 +6,9 @@ import lombok.Getter;
 @AllArgsConstructor
 public class OrderItem {
     @Getter
-    private int quantity;
+    private final int quantity;
     @Getter
-    private String formatCode;
+    private final String formatCode;
 
     public String toString(){
         return this.quantity + " " + this.formatCode;

@@ -71,20 +71,6 @@ public class DpBundleProcessor implements IBundleProcessor {
                 }
             }
         }
-
-        // 如果 dp[amount] 是 amount + 1 ，代表没找到组合结果，否则返回组合成 amount 需要的最少硬币数 dp[amount]
-//        System.out.println(Arrays.toString(dp));
-//        for( int i=0; i< amount+1; i++){
-//            ArrayList s =  stacks[i];
-//            System.out.print(i + " : ");
-//            if(s != null){
-//                System.out.println(Arrays.toString(s.toArray()));
-//            }
-//            System.out.println();
-//        }
-
-
-//        return dp[amount] > amount ? -1 : dp[amount];
         for( int i = amount; i > 0; i--) {
             if(stacks[i] != null){
                 return stacks[i];

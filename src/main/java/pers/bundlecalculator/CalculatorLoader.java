@@ -4,6 +4,7 @@ import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 import pers.bundlecalculator.model.Bundle;
+import pers.bundlecalculator.processor.DpBundleProcessor;
 import pers.bundlecalculator.processor.GreedyBundleProcessor;
 import pers.bundlecalculator.processor.IBundleProcessor;
 
@@ -27,7 +28,7 @@ public class CalculatorLoader {
             BufferedReader br = new BufferedReader(new FileReader(bundleFile));
             CSVParser parser = CSVFormat.DEFAULT.withDelimiter(',').withHeader().parse(br);
             for(CSVRecord record : parser){
-                IBundleProcessor processor = new GreedyBundleProcessor();
+                IBundleProcessor processor = new DpBundleProcessor();
                 String bundlesText = record.get("Bundles");
                 System.out.println(bundlesText);
                 Pattern bundleWholePattern = Pattern.compile("[1-9]\\d*\\s*@\\s*[\\$]*(\\d+(?:\\.\\d+)?)");
