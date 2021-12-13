@@ -5,9 +5,9 @@ import lombok.Getter;
 @AllArgsConstructor
 public class Bundle implements Comparable {
     @Getter
-    private int quantity;
+    private final int quantity;
     @Getter
-    private float price;
+    private final float price;
 
     public Bundle(int quantity, double price) {
         this.quantity = quantity;

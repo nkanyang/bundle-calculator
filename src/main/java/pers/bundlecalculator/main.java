@@ -1,16 +1,15 @@
 package pers.bundlecalculator;
 
 import pers.bundlecalculator.model.OrderItem;
+import pers.bundlecalculator.model.Output;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.Properties;
 
 public class main {
     public static void main(String[] args){
-        System.out.println("Hello World");
         System.out.println(System.getProperty("user.dir"));
         if(args.length != 1){
             System.out.println();
@@ -29,6 +28,7 @@ public class main {
         try{
             BufferedReader br = new BufferedReader(new FileReader(args[0]));
             String line;
+            Output result = null;
             while((line = br.readLine()) != null){
                 try{
                     String[] tmp = line.split(" ");
@@ -37,7 +37,8 @@ public class main {
                     }
                     String formatCode = tmp[1];
                     int quantity = Integer.parseInt(tmp[0]);
-                    calculator.processOrder(new OrderItem(quantity, formatCode));
+                    result = calculator.processOrder(new OrderItem(quantity, formatCode));
+                    System.out.println(result);
                 }catch (IllegalArgumentException ex){
                     System.out.println(ex.getMessage());
                 }

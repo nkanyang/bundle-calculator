@@ -35,14 +35,13 @@ public class DpBundleProcessor implements IBundleProcessor {
                     output.addItem(new OutputItem(count, bundle));
                 }
             }
-            System.out.println(Arrays.toString(combination.toArray()));
+//            System.out.println(Arrays.toString(combination.toArray()));
         }
-        System.out.println(output);
         return output;
     }
 
     private ArrayList<Integer> process(int amount) {
-        int[] buddleArray = this.bundles.stream()
+        int[] bundleArray = this.bundles.stream()
                 .filter(Objects::nonNull)
                 .mapToInt(i -> i.getQuantity())
                 .toArray();
@@ -55,19 +54,19 @@ public class DpBundleProcessor implements IBundleProcessor {
         }
 
         for (int i = 1; i <= amount; i++) {
-            for (int j = 0; j < buddleArray.length; j++) {
-                if (buddleArray[j] <= i) {
-                    if(dp[i] > dp[i - buddleArray[j]] + 1){
-                        if(dp[i] == amount + 1 && stacks[i - buddleArray[j]] != null ){
-                            stacks[i] = new ArrayList<>(stacks[i - buddleArray[j]]);
+            for (int j = 0; j < bundleArray.length; j++) {
+                if (bundleArray[j] <= i) {
+                    if(dp[i] > dp[i - bundleArray[j]] + 1){
+                        if(dp[i] == amount + 1 && stacks[i - bundleArray[j]] != null ){
+                            stacks[i] = new ArrayList<>(stacks[i - bundleArray[j]]);
                         }
                         else {
                             stacks[i] = new ArrayList<>();
                         }
-                        stacks[i].add(buddleArray[j]);
-                        dp[i] = dp[i - buddleArray[j]] + 1;
+                        stacks[i].add(bundleArray[j]);
+                        dp[i] = dp[i - bundleArray[j]] + 1;
                     }
-                    dp[i] = Math.min(dp[i], dp[i - buddleArray[j]] + 1);
+                    dp[i] = Math.min(dp[i], dp[i - bundleArray[j]] + 1);
                 }
             }
         }
