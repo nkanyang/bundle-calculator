@@ -4,19 +4,24 @@ import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 import pers.bundlecalculator.model.Bundle;
-import pers.bundlecalculator.processor.DpBundleProcessor;
 import pers.bundlecalculator.processor.GreedyBundleProcessor;
 import pers.bundlecalculator.processor.IBundleProcessor;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.regex.MatchResult;
+import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class BundleLoader {
-    public BundleCalculator loadCalculator(String bundleFile){
+public class CalculatorLoader {
+    Properties props = new Properties();
+    public BundleCalculator loadCalculator(){
+        this.loadConfig();
+        String bundleFile = this.props.getProperty("bundleSubmission");
+        if(bundleFile == null){
+            //TODO:throw exceptions configuration not found
+        }
         BundleCalculator calculator = new BundleCalculator();
         try {
             BufferedReader br = new BufferedReader(new FileReader(bundleFile));
@@ -51,5 +56,15 @@ public class BundleLoader {
             System.exit(1);
         }
         return calculator;
+    }
+    private void loadConfig(){
+        try {
+            FileReader reader = new FileReader("src/main/resources/application.properties");
+            this.props.load(reader);
+            reader.close();
+//            System.out.println(props.getProperty("bundleSubmission"));
+        } catch (IOException ex) {
+            System.out.println(ex.getMessage());
+        }
     }
 }
