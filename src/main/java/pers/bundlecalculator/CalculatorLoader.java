@@ -3,6 +3,8 @@ package pers.bundlecalculator;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import pers.bundlecalculator.exception.MissingConfigurationException;
 import pers.bundlecalculator.model.Bundle;
 import pers.bundlecalculator.processor.DpBundleProcessor;
@@ -15,10 +17,12 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class CalculatorLoader {
-    Properties props = new Properties();
+    private static final Logger logger = LogManager.getLogger(CalculatorLoader.class);
+    private Properties props = new Properties();
     public BundleCalculator loadCalculator(){
         BundleCalculator calculator = new BundleCalculator();
         try {
+            logger.debug("Read bundleSubmission file path from application.properties. ");
             FileReader reader = new FileReader("src/main/resources/application.properties");
             this.props.load(reader);
             reader.close();
@@ -32,7 +36,7 @@ public class CalculatorLoader {
             CSVParser parser = CSVFormat.DEFAULT.withDelimiter(',').withHeader().parse(br);
             for(CSVRecord record : parser){
                 IBundleProcessor processor = new DpBundleProcessor();
-                System.out.println(record.get("Format code"));
+                logger.info("Parsing bundles: " + record.get("Format code") + ":" + record.get("Bundles"));
                 String bundlesText = record.get("Bundles");
                 Pattern bundleWholePattern = Pattern.compile("[1-9]\\d*\\s*@\\s*[\\$]*(\\d+(?:\\.\\d+)?)");
                 Pattern bundleSinglePattern = Pattern.compile("(\\d+(?:\\.\\d+)?)");
@@ -56,10 +60,10 @@ public class CalculatorLoader {
                 calculator.addBundleProcessor(record.get("Format code"), processor);
             }
         }catch (Exception e ){
-            System.out.println(e.getMessage()); //add to log?
+            logger.error(e.getMessage());
             System.exit(1);
         }
-        System.out.println("Bundles Loaded successfully!");
+        logger.info("Bundles Loaded successfully!");
         return calculator;
     }
 }

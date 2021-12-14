@@ -1,5 +1,7 @@
 package pers.bundlecalculator.processor;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import pers.bundlecalculator.model.Bundle;
 import pers.bundlecalculator.model.OrderItem;
 import pers.bundlecalculator.model.Output;
@@ -8,6 +10,7 @@ import pers.bundlecalculator.model.OutputItem;
 import java.util.*;
 
 public class DpBundleProcessor implements IBundleProcessor {
+    private static final Logger logger = LogManager.getLogger(DpBundleProcessor.class);
     private TreeSet<Bundle> bundles = new TreeSet<>();
     @Override
     public void addBundle(Bundle bundle) {
@@ -35,7 +38,7 @@ public class DpBundleProcessor implements IBundleProcessor {
                     output.addItem(new OutputItem(count, bundle));
                 }
             }
-//            System.out.println(Arrays.toString(combination.toArray()));
+            logger.debug(Arrays.toString(combination.toArray()));
         }
         return output;
     }
