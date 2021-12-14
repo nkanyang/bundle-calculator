@@ -1,28 +1,53 @@
 package pers.bundlecalculator.processor;
 
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import pers.bundlecalculator.model.Bundle;
 import pers.bundlecalculator.model.OrderItem;
 import pers.bundlecalculator.model.Output;
+import pers.bundlecalculator.model.OutputItem;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class DpBundleProcessorTest {
+    private static DpBundleProcessor staticProcessor = new DpBundleProcessor();
+
+    @BeforeAll
+    public static void initProcessor(){
+        staticProcessor.addBundle(new Bundle(3, 570));
+        staticProcessor.addBundle(new Bundle(5, 900));
+        staticProcessor.addBundle(new Bundle(9, 1530));
+    }
 
     @Test
-    void testCoinChange(){
-        DpBundleProcessor processor = new DpBundleProcessor();
-        int[] coins = {3, 5, 9};
-//        int result = processor.process(coins, 4);
-//        System.out.println("number：" + result);
+    void processOrder_whenOrderQuantityLessThanSmallest(){
+        OrderItem order = new OrderItem(2, "Test");
+        Output expected = new Output(order);
+        expected.addItem(new OutputItem(1, new Bundle(3, 570)));
+
+        Output result = staticProcessor.processOrder(order);
+
+        assertEquals(expected.toString(), result.toString());
     }
     @Test
-    void testProcess(){
-        DpBundleProcessor processor = new DpBundleProcessor();
-        processor.addBundle(new Bundle(9, 10));
-        processor.addBundle(new Bundle(5, 60));
-        processor.addBundle(new Bundle(3, 30));
+    void processOrder_whenOrderQuantityBreakDownWithNoReminder(){
+        OrderItem order = new OrderItem(13, "Test");
+        Output expected = new Output(order);
+        expected.addItem(new OutputItem(2, new Bundle(5, 900)));
+        expected.addItem(new OutputItem(1, new Bundle(3, 570)));
 
-        processor.processOrder(new OrderItem(13, "Img"));
-//        System.out.println("number：" + result);
+        Output result = staticProcessor.processOrder(order);
+
+        assertEquals(expected.toString(), result.toString());
+    }
+    @Test
+    void processOrder_whenOrderQuantityBreakDownWithReminder(){
+        OrderItem order = new OrderItem(4, "Test");
+        Output expected = new Output(order);
+        expected.addItem(new OutputItem(2, new Bundle(3, 570)));
+
+        Output result = staticProcessor.processOrder(order);
+
+        assertEquals(expected.toString(), result.toString());
     }
 }

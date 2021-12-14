@@ -10,7 +10,7 @@ import pers.bundlecalculator.model.OutputItem;
 import java.util.*;
 
 public class DpBundleProcessor implements IBundleProcessor {
-    private static final Logger logger = LogManager.getLogger(DpBundleProcessor.class);
+    public static final Logger logger = LogManager.getLogger(DpBundleProcessor.class);
     private TreeSet<Bundle> bundles = new TreeSet<>();
     @Override
     public void addBundle(Bundle bundle) {
