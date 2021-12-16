@@ -1,5 +1,6 @@
 package pers.bundlecalculator.processor;
 
+import lombok.NoArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import pers.bundlecalculator.model.Bundle;
@@ -9,6 +10,7 @@ import pers.bundlecalculator.model.OutputItem;
 
 import java.util.*;
 
+@NoArgsConstructor
 public class DpBundleProcessor implements IBundleProcessor {
     public static final Logger logger = LogManager.getLogger(DpBundleProcessor.class);
     private TreeSet<Bundle> bundles = new TreeSet<>();

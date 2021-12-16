@@ -1,5 +1,6 @@
 package pers.bundlecalculator.processor;
 
+import lombok.NoArgsConstructor;
 import pers.bundlecalculator.model.Bundle;
 import pers.bundlecalculator.model.OrderItem;
 import pers.bundlecalculator.model.Output;
@@ -7,15 +8,12 @@ import pers.bundlecalculator.model.OutputItem;
 
 import java.util.*;
 
+@NoArgsConstructor
 public class GreedyBundleProcessor implements IBundleProcessor {
     private TreeSet<Bundle> bundles = new TreeSet<>();
-    public GreedyBundleProcessor(){
-
-    }
     public void addBundle(Bundle bundle){
         this.bundles.add(bundle);
     }
-
     public Output processOrder(OrderItem orderItem){
         Output output = new Output(orderItem);
         Iterator<Bundle> bundleIt = this.bundles.descendingIterator();

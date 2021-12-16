@@ -13,9 +13,8 @@ public class BundleCalculator {
     private static final Logger logger = LogManager.getLogger(BundleCalculator.class);
     private HashMap<String, IBundleProcessor> bundlesProcessors = new HashMap<>();
 
-    public boolean addBundleProcessor(String formatCode, IBundleProcessor processor){
+    public void addBundleProcessor(String formatCode, IBundleProcessor processor){
         this.bundlesProcessors.put(formatCode, processor);
-        return true;
     }
     public Output processOrder(OrderItem orderItem) throws FormatNotSupportException{
         logger.info("Processing order: Format code = {}, quantity = {} ", orderItem.getFormatCode(), orderItem.getQuantity());

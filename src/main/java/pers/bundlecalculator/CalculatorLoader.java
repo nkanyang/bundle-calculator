@@ -36,26 +36,13 @@ public class CalculatorLoader {
             CSVParser parser = CSVFormat.DEFAULT.withDelimiter(',').withHeader().parse(br);
             for(CSVRecord record : parser){
                 IBundleProcessor processor = new DpBundleProcessor();
-                logger.info("Parsing bundles: " + record.get("Format code") + ":" + record.get("Bundles"));
+                logger.info("Parsing bundles: {} : {}", record.get("Format code"), record.get("Bundles"));
                 String bundlesText = record.get("Bundles");
                 Pattern bundleWholePattern = Pattern.compile("[1-9]\\d*\\s*@\\s*[\\$]*(\\d+(?:\\.\\d+)?)");
-                Pattern bundleSinglePattern = Pattern.compile("(\\d+(?:\\.\\d+)?)");
                 Matcher whole = bundleWholePattern.matcher(bundlesText);
                 while(whole.find()) {
-                    String bundle = whole.group();
-                    Matcher single = bundleSinglePattern.matcher(bundle);
-                    int count = 0;
-                    int quantity = 0;
-                    float price = 0;
-                    while(single.find()){
-                        switch (count){
-                            case 0: quantity = Integer.parseInt(single.group()); break;
-                            case 1: price = Float.parseFloat(single.group()); break;
-                            default: throw new IllegalArgumentException();
-                        }
-                        count++;
-                    }
-                    processor.addBundle(new Bundle(quantity, price));
+                    Bundle bundle = this.parseBundle(whole.group());
+                    processor.addBundle(bundle);
                 }
                 calculator.addBundleProcessor(record.get("Format code"), processor);
             }
@@ -65,5 +52,21 @@ public class CalculatorLoader {
         }
         logger.info("Bundles Loaded successfully!");
         return calculator;
+    }
+    public Bundle parseBundle(String singleBundle) throws IllegalArgumentException{
+        Pattern bundleSinglePattern = Pattern.compile("(\\d+(?:\\.\\d+)?)");
+        Matcher bundle = bundleSinglePattern.matcher(singleBundle);
+        int count = 0;
+        int quantity = 0;
+        float price = 0;
+        while(bundle.find()){
+            switch (count){
+                case 0: quantity = Integer.parseInt(bundle.group()); break;
+                case 1: price = Float.parseFloat(bundle.group()); break;
+                default: throw new IllegalArgumentException();
+            }
+            count++;
+        }
+        return new Bundle(quantity, price);
     }
 }
