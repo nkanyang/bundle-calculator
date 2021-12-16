@@ -12,41 +12,29 @@ import java.io.IOException;
 
 public class Application {
     private static final Logger logger = LogManager.getLogger(Application.class);
-    public static void main(String[] args){
-//        System.out.println(System.getProperty("user.dir"));
-        if(args.length != 1){
-            showHelpInfo();
-            System.exit(0);
-        }
 
-        File orderFile = new File(args[0]);
-        if(!orderFile.exists()){
-            System.out.println("File \"" + args[0] + "\" does not exists!");
-            showHelpInfo();
-            System.exit(1);
-        }
-
+    public static void main(String[] args) {
+        validateArguments(args);
         CalculatorLoader loader = new CalculatorLoader();
-        BundleCalculator calculator = loader.loadCalculator();
-        try{
-            BufferedReader br = new BufferedReader(new FileReader(args[0]));
+        BundleCalculator calculator = loader.loadCalculator(args[0]);
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(args[1]));
             String line;
             Output result = null;
-            while((line = br.readLine()) != null){
-                try{
+            while ((line = br.readLine()) != null) {
+                try {
                     String[] tmp = line.split(" ");
-                    if(tmp.length != 2){
+                    if (tmp.length != 2) {
                         throw new IllegalArgumentException("Incorrect argument number: " + line);
                     }
                     String formatCode = tmp[1];
                     int quantity = Integer.parseInt(tmp[0]);
                     result = calculator.processOrder(new OrderItem(quantity, formatCode));
                     System.out.println(result);
-                }catch (IllegalArgumentException ex){
+                } catch (IllegalArgumentException ex) {
                     System.out.println(line + ": Parse Failed!");
                     logger.error(ex.getMessage());
-                }
-                finally {
+                } finally {
                     continue;
                 }
             }
@@ -57,7 +45,22 @@ public class Application {
     }
 
     public static void showHelpInfo() {
-        String helpInfo = "\n\n  Usage: java -jar bundlecalcultor.jar <orderFileName>\n";
+        String helpInfo = "\n  Usage: \n    java -jar bundlecalcultor.jar <bundleFileName> <orderFileName>\n";
         System.out.println(helpInfo);
+        System.exit(0);
+    }
+
+    public static void validateArguments(String[] args) {
+        if (args.length != 2) {
+            System.out.println("Wrong argument number!");
+            showHelpInfo();
+        }
+
+        for (String fileName : args) {
+            if (!new File(fileName).exists()) {
+                System.out.println("File \"" + fileName + "\" does not exists!");
+                showHelpInfo();
+            }
+        }
     }
 }

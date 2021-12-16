@@ -10,7 +10,7 @@ public class OrderItem {
     @Getter
     private final String formatCode;
 
-    public String toString(){
+    public String toString() {
         return this.quantity + " " + this.formatCode;
     }
 }

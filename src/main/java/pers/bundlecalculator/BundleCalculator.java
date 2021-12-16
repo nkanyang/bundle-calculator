@@ -11,15 +11,16 @@ import java.util.HashMap;
 
 public class BundleCalculator {
     private static final Logger logger = LogManager.getLogger(BundleCalculator.class);
-    private HashMap<String, IBundleProcessor> bundlesProcessors = new HashMap<>();
+    private final HashMap<String, IBundleProcessor> bundlesProcessors = new HashMap<>();
 
-    public void addBundleProcessor(String formatCode, IBundleProcessor processor){
+    public void addBundleProcessor(String formatCode, IBundleProcessor processor) {
         this.bundlesProcessors.put(formatCode, processor);
     }
-    public Output processOrder(OrderItem orderItem) throws FormatNotSupportException{
+
+    public Output processOrder(OrderItem orderItem) throws FormatNotSupportException {
         logger.info("Processing order: Format code = {}, quantity = {} ", orderItem.getFormatCode(), orderItem.getQuantity());
         IBundleProcessor processor = this.bundlesProcessors.get(orderItem.getFormatCode());
-        if(processor == null){
+        if (processor == null) {
             throw new FormatNotSupportException(orderItem.getFormatCode());
         }
         return processor.processOrder(orderItem);

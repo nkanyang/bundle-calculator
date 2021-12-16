@@ -13,7 +13,8 @@ import java.util.*;
 @NoArgsConstructor
 public class DpBundleProcessor implements IBundleProcessor {
     public static final Logger logger = LogManager.getLogger(DpBundleProcessor.class);
-    private TreeSet<Bundle> bundles = new TreeSet<>();
+    private final TreeSet<Bundle> bundles = new TreeSet<>();
+
     @Override
     public void addBundle(Bundle bundle) {
         this.bundles.add(bundle);
@@ -23,20 +24,19 @@ public class DpBundleProcessor implements IBundleProcessor {
     public Output processOrder(OrderItem orderItem) {
         Output output = new Output(orderItem);
         ArrayList<Integer> combination = this.process(orderItem.getQuantity());
-        if(combination == null){
+        if (combination == null) {
             output.addItem(new OutputItem(1, bundles.first()));
-        }
-        else{
+        } else {
             Iterator<Bundle> bundleIt = this.bundles.descendingIterator();
             int reminder = orderItem.getQuantity();
-            while (bundleIt.hasNext()){
+            while (bundleIt.hasNext()) {
                 Bundle bundle = bundleIt.next();
                 int count = Collections.frequency(combination, bundle.getQuantity());
                 reminder -= count * bundle.getQuantity();
-                if(reminder > 0 && !bundleIt.hasNext()){
-                    count ++;
+                if (reminder > 0 && !bundleIt.hasNext()) {
+                    count++;
                 }
-                if(count > 0){
+                if (count > 0) {
                     output.addItem(new OutputItem(count, bundle));
                 }
             }
@@ -61,11 +61,10 @@ public class DpBundleProcessor implements IBundleProcessor {
         for (int i = 1; i <= amount; i++) {
             for (int j = 0; j < bundleArray.length; j++) {
                 if (bundleArray[j] <= i) {
-                    if(dp[i] > dp[i - bundleArray[j]] + 1){
-                        if(dp[i] == amount + 1 && stacks[i - bundleArray[j]] != null ){
+                    if (dp[i] > dp[i - bundleArray[j]] + 1) {
+                        if (dp[i] == amount + 1 && stacks[i - bundleArray[j]] != null) {
                             stacks[i] = new ArrayList<>(stacks[i - bundleArray[j]]);
-                        }
-                        else {
+                        } else {
                             stacks[i] = new ArrayList<>();
                         }
                         stacks[i].add(bundleArray[j]);
@@ -75,8 +74,8 @@ public class DpBundleProcessor implements IBundleProcessor {
                 }
             }
         }
-        for( int i = amount; i > 0; i--) {
-            if(stacks[i] != null){
+        for (int i = amount; i > 0; i--) {
+            if (stacks[i] != null) {
                 return stacks[i];
             }
         }

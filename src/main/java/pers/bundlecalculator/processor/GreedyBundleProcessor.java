@@ -6,26 +6,29 @@ import pers.bundlecalculator.model.OrderItem;
 import pers.bundlecalculator.model.Output;
 import pers.bundlecalculator.model.OutputItem;
 
-import java.util.*;
+import java.util.Iterator;
+import java.util.TreeSet;
 
 @NoArgsConstructor
 public class GreedyBundleProcessor implements IBundleProcessor {
-    private TreeSet<Bundle> bundles = new TreeSet<>();
-    public void addBundle(Bundle bundle){
+    private final TreeSet<Bundle> bundles = new TreeSet<>();
+
+    public void addBundle(Bundle bundle) {
         this.bundles.add(bundle);
     }
-    public Output processOrder(OrderItem orderItem){
+
+    public Output processOrder(OrderItem orderItem) {
         Output output = new Output(orderItem);
         Iterator<Bundle> bundleIt = this.bundles.descendingIterator();
         int reminder = orderItem.getQuantity();
-        while (bundleIt.hasNext()){
+        while (bundleIt.hasNext()) {
             Bundle bundle = bundleIt.next();
             int count = reminder / bundle.getQuantity();
             reminder = reminder % bundle.getQuantity();
-            if(reminder > 0 && !bundleIt.hasNext()){
-                count ++;
+            if (reminder > 0 && !bundleIt.hasNext()) {
+                count++;
             }
-            if(count > 0){
+            if (count > 0) {
                 output.addItem(new OutputItem(count, bundle));
             }
         }

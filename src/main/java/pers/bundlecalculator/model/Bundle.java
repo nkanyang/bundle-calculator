@@ -1,4 +1,5 @@
 package pers.bundlecalculator.model;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -11,7 +12,7 @@ public class Bundle implements Comparable {
 
     public Bundle(int quantity, double price) {
         this.quantity = quantity;
-        this.price = (float)price;
+        this.price = (float) price;
     }
 
     @Override

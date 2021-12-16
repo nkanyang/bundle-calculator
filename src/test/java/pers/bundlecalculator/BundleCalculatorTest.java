@@ -7,12 +7,12 @@ import pers.bundlecalculator.model.Output;
 import pers.bundlecalculator.processor.DpBundleProcessor;
 import pers.bundlecalculator.processor.IBundleProcessor;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
-import static org.junit.jupiter.api.Assertions.*;
 
 public class BundleCalculatorTest {
     @Test
-    public void processOrder_whenFormatSupported_thenOK(){
+    public void processOrder_whenFormatSupported_thenOK() {
         IBundleProcessor processor = mock(DpBundleProcessor.class);
         BundleCalculator calculator = new BundleCalculator();
         OrderItem orderItem = new OrderItem(13, "Mock");
@@ -25,7 +25,7 @@ public class BundleCalculatorTest {
     }
 
     @Test
-    public void processOrder_whenFormatNotSupported_thenThrow(){
+    public void processOrder_whenFormatNotSupported_thenThrow() {
         BundleCalculator calculator = new BundleCalculator();
         OrderItem orderItem = new OrderItem(13, "Mock");
 
