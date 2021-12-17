@@ -62,7 +62,7 @@ public class DpBundleProcessor implements IBundleProcessor {
             for (int j = 0; j < bundleArray.length; j++) {
                 if (bundleArray[j] <= i) {
                     if (dp[i] > dp[i - bundleArray[j]] + 1) {
-                        if (dp[i] == amount + 1 && stacks[i - bundleArray[j]] != null) {
+                        if (stacks[i - bundleArray[j]] != null) {
                             stacks[i] = new ArrayList<>(stacks[i - bundleArray[j]]);
                         } else {
                             stacks[i] = new ArrayList<>();
