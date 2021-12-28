@@ -8,10 +8,12 @@ import java.util.Iterator;
 @NoArgsConstructor
 public class Order {
     private final ArrayList<OrderItem> items = new ArrayList<>();
-    public void addItem(OrderItem item){
+
+    public void addItem(OrderItem item) {
         this.items.add(item);
     }
-    public Iterator<OrderItem> getIterator(){
+
+    public Iterator<OrderItem> getIterator() {
         return this.items.listIterator();
     }
 }

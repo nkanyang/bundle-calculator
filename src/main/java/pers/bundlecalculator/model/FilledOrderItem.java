@@ -4,8 +4,8 @@ import java.util.ArrayList;
 
 public class FilledOrderItem {
     private final OrderItem orderItem;
-    private float totalPrice = 0;
     private final ArrayList<FilledOrderChildItem> filledOrderChildItems = new ArrayList<>();
+    private float totalPrice = 0;
 
     public FilledOrderItem(OrderItem orderItem) {
         this.orderItem = orderItem;

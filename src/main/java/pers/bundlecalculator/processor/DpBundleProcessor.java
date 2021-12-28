@@ -4,9 +4,9 @@ import lombok.NoArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import pers.bundlecalculator.model.Bundle;
+import pers.bundlecalculator.model.FilledOrderChildItem;
 import pers.bundlecalculator.model.FilledOrderItem;
 import pers.bundlecalculator.model.OrderItem;
-import pers.bundlecalculator.model.FilledOrderChildItem;
 
 import java.util.*;
 
@@ -40,37 +40,27 @@ public class DpBundleProcessor implements IBundleProcessor {
     }
 
     private ArrayList<Integer> process(int amount, TreeSet<Bundle> bundleSet) {
-        int[] bundleArray = bundleSet.stream()
+        int[] bundles = bundleSet.stream()
                 .filter(Objects::nonNull)
                 .mapToInt(i -> i.getQuantity())
                 .toArray();
-
         int[] dp = new int[amount + 1];
-        ArrayList<Integer>[] stacks = new ArrayList[amount + 1];
-        for (int i = 1; i < dp.length; i++) {
-            dp[i] = amount + 1;
-            stacks[i] = null;
-        }
-
+        ArrayList<Integer>[] combination = new ArrayList[amount + 1];
         for (int i = 1; i < amount + 1; i++) {
-            for (int j = 0; j < bundleArray.length; j++) {
-                if (bundleArray[j] <= i) {
-                    if (dp[i] > dp[i - bundleArray[j]] + 1) {
-                        if (stacks[i - bundleArray[j]] != null) {
-                            stacks[i] = new ArrayList<>(stacks[i - bundleArray[j]]);
-                        } else {
-                            stacks[i] = new ArrayList<>();
-                        }
-                        stacks[i].add(bundleArray[j]);
-                        dp[i] = dp[i - bundleArray[j]] + 1;
-                    }
-                    dp[i] = Math.min(dp[i], dp[i - bundleArray[j]] + 1);
+            dp[i] = amount + 1;
+            for (int j = 0; j < bundles.length; j++) {
+                if (i >= bundles[j] && dp[i] > dp[i - bundles[j]] + 1) {
+                    combination[i] = combination[i - bundles[j]] != null
+                            ? new ArrayList<>(combination[i - bundles[j]])
+                            : new ArrayList<>();
+                    combination[i].add(bundles[j]);
+                    dp[i] = dp[i - bundles[j]] + 1;
                 }
             }
         }
         for (int i = amount; i > 0; i--) {
-            if (stacks[i] != null) {
-                return stacks[i];
+            if (combination[i] != null) {
+                return combination[i];
             }
         }
         return null;

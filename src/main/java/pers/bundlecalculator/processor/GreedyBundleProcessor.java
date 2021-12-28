@@ -1,7 +1,10 @@
 package pers.bundlecalculator.processor;
 
 import lombok.NoArgsConstructor;
-import pers.bundlecalculator.model.*;
+import pers.bundlecalculator.model.Bundle;
+import pers.bundlecalculator.model.FilledOrderChildItem;
+import pers.bundlecalculator.model.FilledOrderItem;
+import pers.bundlecalculator.model.OrderItem;
 
 import java.util.Iterator;
 import java.util.TreeSet;

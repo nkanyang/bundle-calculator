@@ -5,9 +5,9 @@ import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import pers.bundlecalculator.config.BundleConfig;
 import pers.bundlecalculator.config.IBundleConfig;
 import pers.bundlecalculator.model.Bundle;
-import pers.bundlecalculator.config.BundleConfig;
 import pers.bundlecalculator.model.Order;
 import pers.bundlecalculator.model.OrderItem;
 
@@ -32,8 +32,10 @@ public class FileParser {
                 Pattern bundleWholePattern = Pattern.compile("[1-9]\\d*\\s*@\\s*[\\$]*(\\d+(?:\\.\\d+)?)");
                 Matcher whole = bundleWholePattern.matcher(bundlesText);
                 while (whole.find()) {
-                    Bundle bundle = this.parseBundle(whole.group());
-                    config.addBundle(format, bundle);
+                    String[] bundleDetail = whole.group().replaceAll("[^\\d\\s.]", "").split("\\s+");
+                    int quantity = Integer.parseInt(bundleDetail[0].trim());
+                    float price = Float.parseFloat(bundleDetail[1]);
+                    config.addBundle(format, new Bundle(quantity, price));
                 }
             }
         } catch (Exception e) {
@@ -44,29 +46,7 @@ public class FileParser {
         return config;
     }
 
-    public Bundle parseBundle(String singleBundle) {
-        Pattern bundleSinglePattern = Pattern.compile("(\\d+(?:\\.\\d+)?)");
-        Matcher bundle = bundleSinglePattern.matcher(singleBundle);
-        int count = 0;
-        int quantity = 0;
-        float price = 0;
-        while (bundle.find()) {
-            switch (count) {
-                case 0:
-                    quantity = Integer.parseInt(bundle.group());
-                    break;
-                case 1:
-                    price = Float.parseFloat(bundle.group());
-                    break;
-                default:
-                    throw new IllegalArgumentException();
-            }
-            count++;
-        }
-        return new Bundle(quantity, price);
-    }
-
-    public Order parseOrder(String orderFilePath){
+    public Order parseOrder(String orderFilePath) {
         Order order = new Order();
         try {
             BufferedReader br = new BufferedReader(new FileReader(orderFilePath));
@@ -81,7 +61,7 @@ public class FileParser {
                     int quantity = Integer.parseInt(tmp[0]);
                     order.addItem(new OrderItem(quantity, formatCode));
                 } catch (IllegalArgumentException ex) {
-                    System.out.println(line + ": Parse Failed!");
+                    System.out.println(line + ": Illegal order format!");
                     logger.error(ex.getMessage());
                 } finally {
                     continue;

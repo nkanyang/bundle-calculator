@@ -3,9 +3,9 @@ package pers.bundlecalculator.processor;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import pers.bundlecalculator.model.Bundle;
+import pers.bundlecalculator.model.FilledOrderChildItem;
 import pers.bundlecalculator.model.FilledOrderItem;
 import pers.bundlecalculator.model.OrderItem;
-import pers.bundlecalculator.model.FilledOrderChildItem;
 
 import java.util.TreeSet;
 
