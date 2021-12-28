@@ -1,11 +1,16 @@
 package pers.bundlecalculator.processor;
 
+import pers.bundlecalculator.config.BundleConfig;
 import pers.bundlecalculator.model.Bundle;
+import pers.bundlecalculator.model.FilledOrderItem;
 import pers.bundlecalculator.model.OrderItem;
-import pers.bundlecalculator.model.Output;
+
+import java.util.TreeSet;
 
 public interface IBundleProcessor {
-    void addBundle(Bundle bundle);
+//    void addBundle(Bundle bundle);
 
-    Output processOrder(OrderItem orderItem);
+//    FilledOrderItem processOrder(OrderItem orderItem);
+    FilledOrderItem processOrder(OrderItem orderItem, TreeSet<Bundle> bundleSet);
+
 }

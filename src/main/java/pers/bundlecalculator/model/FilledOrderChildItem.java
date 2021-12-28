@@ -2,13 +2,13 @@ package pers.bundlecalculator.model;
 
 import lombok.Getter;
 
-public class OutputItem {
+public class FilledOrderChildItem {
     private final int quantity;
     private final Bundle bundle;
     @Getter
     private final float totalPrice;
 
-    public OutputItem(int quantity, Bundle bundle) {
+    public FilledOrderChildItem(int quantity, Bundle bundle) {
         this.quantity = quantity;
         this.bundle = bundle;
         this.totalPrice = quantity * bundle.getPrice();

@@ -4,30 +4,24 @@ import lombok.NoArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import pers.bundlecalculator.model.Bundle;
+import pers.bundlecalculator.model.FilledOrderItem;
 import pers.bundlecalculator.model.OrderItem;
-import pers.bundlecalculator.model.Output;
-import pers.bundlecalculator.model.OutputItem;
+import pers.bundlecalculator.model.FilledOrderChildItem;
 
 import java.util.*;
 
 @NoArgsConstructor
 public class DpBundleProcessor implements IBundleProcessor {
     public static final Logger logger = LogManager.getLogger(DpBundleProcessor.class);
-    private final TreeSet<Bundle> bundles = new TreeSet<>();
 
     @Override
-    public void addBundle(Bundle bundle) {
-        this.bundles.add(bundle);
-    }
-
-    @Override
-    public Output processOrder(OrderItem orderItem) {
-        Output output = new Output(orderItem);
-        ArrayList<Integer> combination = this.process(orderItem.getQuantity());
+    public FilledOrderItem processOrder(OrderItem orderItem, TreeSet<Bundle> bundleSet) {
+        FilledOrderItem filledOrderItem = new FilledOrderItem(orderItem);
+        ArrayList<Integer> combination = this.process(orderItem.getQuantity(), bundleSet);
         if (combination == null) {
-            output.addItem(new OutputItem(1, bundles.first()));
+            filledOrderItem.addItem(new FilledOrderChildItem(1, bundleSet.first()));
         } else {
-            Iterator<Bundle> bundleIt = this.bundles.descendingIterator();
+            Iterator<Bundle> bundleIt = bundleSet.descendingIterator();
             int reminder = orderItem.getQuantity();
             while (bundleIt.hasNext()) {
                 Bundle bundle = bundleIt.next();
@@ -37,16 +31,16 @@ public class DpBundleProcessor implements IBundleProcessor {
                     count++;
                 }
                 if (count > 0) {
-                    output.addItem(new OutputItem(count, bundle));
+                    filledOrderItem.addItem(new FilledOrderChildItem(count, bundle));
                 }
             }
             logger.debug(Arrays.toString(combination.toArray()));
         }
-        return output;
+        return filledOrderItem;
     }
 
-    private ArrayList<Integer> process(int amount) {
-        int[] bundleArray = this.bundles.stream()
+    private ArrayList<Integer> process(int amount, TreeSet<Bundle> bundleSet) {
+        int[] bundleArray = bundleSet.stream()
                 .filter(Objects::nonNull)
                 .mapToInt(i -> i.getQuantity())
                 .toArray();
@@ -58,7 +52,7 @@ public class DpBundleProcessor implements IBundleProcessor {
             stacks[i] = null;
         }
 
-        for (int i = 1; i <= amount; i++) {
+        for (int i = 1; i < amount + 1; i++) {
             for (int j = 0; j < bundleArray.length; j++) {
                 if (bundleArray[j] <= i) {
                     if (dp[i] > dp[i - bundleArray[j]] + 1) {

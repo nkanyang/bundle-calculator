@@ -1,25 +1,18 @@
 package pers.bundlecalculator.processor;
 
 import lombok.NoArgsConstructor;
-import pers.bundlecalculator.model.Bundle;
-import pers.bundlecalculator.model.OrderItem;
-import pers.bundlecalculator.model.Output;
-import pers.bundlecalculator.model.OutputItem;
+import pers.bundlecalculator.model.*;
 
 import java.util.Iterator;
 import java.util.TreeSet;
 
 @NoArgsConstructor
 public class GreedyBundleProcessor implements IBundleProcessor {
-    private final TreeSet<Bundle> bundles = new TreeSet<>();
 
-    public void addBundle(Bundle bundle) {
-        this.bundles.add(bundle);
-    }
-
-    public Output processOrder(OrderItem orderItem) {
-        Output output = new Output(orderItem);
-        Iterator<Bundle> bundleIt = this.bundles.descendingIterator();
+    @Override
+    public FilledOrderItem processOrder(OrderItem orderItem, TreeSet<Bundle> bundleSet) {
+        FilledOrderItem filledOrderItem = new FilledOrderItem(orderItem);
+        Iterator<Bundle> bundleIt = bundleSet.descendingIterator();
         int reminder = orderItem.getQuantity();
         while (bundleIt.hasNext()) {
             Bundle bundle = bundleIt.next();
@@ -29,9 +22,9 @@ public class GreedyBundleProcessor implements IBundleProcessor {
                 count++;
             }
             if (count > 0) {
-                output.addItem(new OutputItem(count, bundle));
+                filledOrderItem.addItem(new FilledOrderChildItem(count, bundle));
             }
         }
-        return output;
+        return filledOrderItem;
     }
 }

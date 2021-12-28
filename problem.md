@@ -25,7 +25,7 @@ An example input:
 ```
 
 ### Output:
-A successfully passing test(s) that demonstrates the following output: (The format of the output is not important)
+A successfully passing test(s) that demonstrates the following filledOrderItem: (The format of the filledOrderItem is not important)
 ```
 10 IMG $800
   1 x 10 $800

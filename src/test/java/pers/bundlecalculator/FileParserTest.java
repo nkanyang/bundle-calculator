@@ -6,13 +6,13 @@ import pers.bundlecalculator.model.Bundle;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class CalculatorLoaderTest {
-    private final CalculatorLoader loader = new CalculatorLoader();
+public class FileParserTest {
+    private final FileParser parser = new FileParser();
 
     @Test
     public void parseBundle_whenFormatCorrect_thenReturnBundle() {
         String bundleString = "5 @ $130.00";
-        Bundle result = loader.parseBundle(bundleString);
+        Bundle result = parser.parseBundle(bundleString);
         assertEquals(5, result.getQuantity());
         assertEquals(130, result.getPrice());
     }
@@ -21,7 +21,7 @@ public class CalculatorLoaderTest {
     public void parseBundle_whenTooManyArguments_thenThrow() {
         String bundleString = "5 @ $130.00 23";
         assertThrows(IllegalArgumentException.class,
-                () -> loader.parseBundle(bundleString));
+                () -> parser.parseBundle(bundleString));
     }
 }
 

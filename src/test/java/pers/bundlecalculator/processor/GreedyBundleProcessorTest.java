@@ -11,8 +11,8 @@ import java.util.TreeSet;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class DpBundleProcessorTest {
-    private static final DpBundleProcessor staticProcessor = new DpBundleProcessor();
+public class GreedyBundleProcessorTest {
+    private static final GreedyBundleProcessor staticProcessor = new GreedyBundleProcessor();
     private static final TreeSet<Bundle> bundleSet = new TreeSet<>();
 
     @BeforeAll
@@ -35,10 +35,10 @@ public class DpBundleProcessorTest {
 
     @Test
     void processOrder_whenOrderQuantityBreakDownWithNoReminder() {
-        OrderItem order = new OrderItem(13, "Test");
+        OrderItem order = new OrderItem(14, "Test");
         FilledOrderItem expected = new FilledOrderItem(order);
-        expected.addItem(new FilledOrderChildItem(2, new Bundle(5, 900)));
-        expected.addItem(new FilledOrderChildItem(1, new Bundle(3, 570)));
+        expected.addItem(new FilledOrderChildItem(1, new Bundle(9, 1530)));
+        expected.addItem(new FilledOrderChildItem(1, new Bundle(5, 900)));
 
         FilledOrderItem result = staticProcessor.processOrder(order, bundleSet);
 
@@ -46,7 +46,19 @@ public class DpBundleProcessorTest {
     }
 
     @Test
-    void processOrder_whenOrderQuantityBreakDownWithReminder() {
+    void processOrder_whenOrderQuantityBreakDownWithReminder1() {
+        OrderItem order = new OrderItem(13, "Test");
+        FilledOrderItem expected = new FilledOrderItem(order);
+        expected.addItem(new FilledOrderChildItem(1, new Bundle(9, 1530)));
+        expected.addItem(new FilledOrderChildItem(2, new Bundle(3, 570)));
+
+        FilledOrderItem result = staticProcessor.processOrder(order, bundleSet);
+
+        assertEquals(expected.toString(), result.toString());
+    }
+
+    @Test
+    void processOrder_whenOrderQuantityBreakDownWithReminder2() {
         OrderItem order = new OrderItem(4, "Test");
         FilledOrderItem expected = new FilledOrderItem(order);
         expected.addItem(new FilledOrderChildItem(2, new Bundle(3, 570)));
