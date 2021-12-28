@@ -1,7 +1,5 @@
 package pers.bundlecalculator;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import pers.bundlecalculator.config.IBundleConfig;
 import pers.bundlecalculator.model.Order;
 import pers.bundlecalculator.processor.DpBundleProcessor;
@@ -10,8 +8,6 @@ import pers.bundlecalculator.processor.IBundleProcessor;
 import java.io.File;
 
 public class Application {
-    private static final Logger logger = LogManager.getLogger(Application.class);
-
     public static void main(String[] args) {
         if (args.length != 2) {
             System.out.println("Wrong argument number!");

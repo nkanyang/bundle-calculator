@@ -42,7 +42,7 @@ public class DpBundleProcessor implements IBundleProcessor {
     private ArrayList<Integer> process(int amount, TreeSet<Bundle> bundleSet) {
         int[] bundles = bundleSet.stream()
                 .filter(Objects::nonNull)
-                .mapToInt(i -> i.getQuantity())
+                .mapToInt(Bundle::getQuantity)
                 .toArray();
         int[] dp = new int[amount + 1];
         ArrayList<Integer>[] combination = new ArrayList[amount + 1];

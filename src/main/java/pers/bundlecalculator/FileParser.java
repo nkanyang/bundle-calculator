@@ -63,8 +63,6 @@ public class FileParser {
                 } catch (IllegalArgumentException ex) {
                     System.out.println(line + ": Illegal order format!");
                     logger.error(ex.getMessage());
-                } finally {
-                    continue;
                 }
             }
         } catch (IOException e) {
