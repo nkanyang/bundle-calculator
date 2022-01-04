@@ -3,23 +3,22 @@ package pers.bundlecalculator.config;
 import lombok.NoArgsConstructor;
 import pers.bundlecalculator.model.Bundle;
 
-import java.util.HashMap;
-import java.util.TreeSet;
+import java.util.*;
 
 @NoArgsConstructor
 public class BundleConfig implements IBundleConfig {
-    private final HashMap<String, TreeSet<Bundle>> bundleSet = new HashMap<>();
+    private final Map<String, Map<Integer, Bundle>> bundleSet = new HashMap<>();
 
     public void addBundle(String formatCode, Bundle bundle) {
-        TreeSet<Bundle> bundles = bundleSet.get(formatCode);
+        Map bundles = bundleSet.get(formatCode);
         if (bundles == null) {
-            bundles = new TreeSet<>();
+            bundles = new HashMap<>();;
             bundleSet.put(formatCode, bundles);
         }
-        bundles.add(bundle);
+        bundles.put(bundle.getQuantity(), bundle);
     }
 
-    public TreeSet<Bundle> getBundles(String formatCode) {
+    public Map<Integer, Bundle> getBundles(String formatCode) {
         return bundleSet.get(formatCode);
     }
 }

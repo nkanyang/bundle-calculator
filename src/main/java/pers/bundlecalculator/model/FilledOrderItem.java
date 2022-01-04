@@ -1,10 +1,11 @@
 package pers.bundlecalculator.model;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class FilledOrderItem {
     private final OrderItem orderItem;
-    private final ArrayList<FilledOrderChildItem> filledOrderChildItems = new ArrayList<>();
+    private final List<FilledOrderChildItem> filledOrderChildItems = new ArrayList<>();
     private float totalPrice = 0;
 
     public FilledOrderItem(OrderItem orderItem) {

@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @AllArgsConstructor
-public class Bundle implements Comparable {
+public class Bundle{
     @Getter
     private final int quantity;
     @Getter
@@ -13,11 +13,5 @@ public class Bundle implements Comparable {
     public Bundle(int quantity, double price) {
         this.quantity = quantity;
         this.price = (float) price;
-    }
-
-    @Override
-    public int compareTo(Object o) {
-        Bundle b = (Bundle) o;
-        return Integer.compare(this.quantity, b.quantity);
     }
 }

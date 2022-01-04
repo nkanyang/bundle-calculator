@@ -1,33 +1,34 @@
 package pers.bundlecalculator.processor;
 
 import lombok.NoArgsConstructor;
-import pers.bundlecalculator.model.Bundle;
-import pers.bundlecalculator.model.FilledOrderChildItem;
-import pers.bundlecalculator.model.FilledOrderItem;
-import pers.bundlecalculator.model.OrderItem;
 
-import java.util.Iterator;
-import java.util.TreeSet;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @NoArgsConstructor
 public class GreedyBundleProcessor implements IBundleProcessor {
-
     @Override
-    public FilledOrderItem processOrder(OrderItem orderItem, TreeSet<Bundle> bundleSet) {
-        FilledOrderItem filledOrderItem = new FilledOrderItem(orderItem);
-        Iterator<Bundle> bundleIt = bundleSet.descendingIterator();
-        int reminder = orderItem.getQuantity();
-        while (bundleIt.hasNext()) {
-            Bundle bundle = bundleIt.next();
-            int count = reminder / bundle.getQuantity();
-            reminder = reminder % bundle.getQuantity();
-            if (reminder > 0 && !bundleIt.hasNext()) {
-                count++;
-            }
-            if (count > 0) {
-                filledOrderItem.addItem(new FilledOrderChildItem(count, bundle));
-            }
+    public Map<Integer, Integer> process(int quantity, List<Integer> bundles) {
+        Map<Integer, Integer> result = new HashMap<>();
+        int reminder = quantity;
+
+        List<Integer> descendingBundles = bundles.stream()
+                .sorted((b1, b2) -> -Integer.compare(b1, b2))
+                .collect(Collectors.toList());
+
+        for (int bundleSize : descendingBundles) {
+            int count = reminder / bundleSize;
+            result.put(bundleSize, count);
+            reminder = reminder % bundleSize;
         }
-        return filledOrderItem;
+
+        if (reminder > 0) {
+            int smallest = descendingBundles.get(descendingBundles.size() - 1);
+            result.put(smallest, result.get(smallest) + 1);
+        }
+
+        return result;
     }
 }

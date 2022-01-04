@@ -1,19 +1,18 @@
 package pers.bundlecalculator.model;
 
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 @NoArgsConstructor
 public class Order {
-    private final ArrayList<OrderItem> items = new ArrayList<>();
+    @Getter
+    private final List<OrderItem> items = new ArrayList<>();
 
     public void addItem(OrderItem item) {
         this.items.add(item);
-    }
-
-    public Iterator<OrderItem> getIterator() {
-        return this.items.listIterator();
     }
 }

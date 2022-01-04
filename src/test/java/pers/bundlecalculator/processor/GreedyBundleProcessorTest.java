@@ -1,70 +1,48 @@
 package pers.bundlecalculator.processor;
 
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import pers.bundlecalculator.model.Bundle;
-import pers.bundlecalculator.model.FilledOrderChildItem;
-import pers.bundlecalculator.model.FilledOrderItem;
-import pers.bundlecalculator.model.OrderItem;
 
-import java.util.TreeSet;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class GreedyBundleProcessorTest {
     private static final GreedyBundleProcessor staticProcessor = new GreedyBundleProcessor();
-    private static final TreeSet<Bundle> bundleSet = new TreeSet<>();
-
-    @BeforeAll
-    public static void initProcessor() {
-        bundleSet.add(new Bundle(3, 570));
-        bundleSet.add(new Bundle(5, 900));
-        bundleSet.add(new Bundle(9, 1530));
-    }
+    private static final List<Integer> bundleList = new ArrayList<>(Arrays.asList(3, 5, 9));
 
     @Test
     void processOrder_whenOrderQuantityLessThanSmallest() {
-        OrderItem order = new OrderItem(2, "Test");
-        FilledOrderItem expected = new FilledOrderItem(order);
-        expected.addItem(new FilledOrderChildItem(1, new Bundle(3, 570)));
+        Map<Integer, Integer> result = staticProcessor.process(2, bundleList);
 
-        FilledOrderItem result = staticProcessor.processOrder(order, bundleSet);
-
-        assertEquals(expected.toString(), result.toString());
+        assertEquals(1, result.get(3));
+        assertEquals(0, result.get(5));
+        assertEquals(0, result.get(9));
     }
 
     @Test
     void processOrder_whenOrderQuantityBreakDownWithNoReminder() {
-        OrderItem order = new OrderItem(14, "Test");
-        FilledOrderItem expected = new FilledOrderItem(order);
-        expected.addItem(new FilledOrderChildItem(1, new Bundle(9, 1530)));
-        expected.addItem(new FilledOrderChildItem(1, new Bundle(5, 900)));
+        Map<Integer, Integer> result = staticProcessor.process(14, bundleList);
 
-        FilledOrderItem result = staticProcessor.processOrder(order, bundleSet);
-
-        assertEquals(expected.toString(), result.toString());
+        assertEquals(0, result.get(3));
+        assertEquals(1, result.get(5));
+        assertEquals(1, result.get(9));
     }
 
     @Test
     void processOrder_whenOrderQuantityBreakDownWithReminder1() {
-        OrderItem order = new OrderItem(13, "Test");
-        FilledOrderItem expected = new FilledOrderItem(order);
-        expected.addItem(new FilledOrderChildItem(1, new Bundle(9, 1530)));
-        expected.addItem(new FilledOrderChildItem(2, new Bundle(3, 570)));
+        Map<Integer, Integer> result = staticProcessor.process(13, bundleList);
 
-        FilledOrderItem result = staticProcessor.processOrder(order, bundleSet);
-
-        assertEquals(expected.toString(), result.toString());
+        assertEquals(2, result.get(3));
+        assertEquals(0, result.get(5));
+        assertEquals(1, result.get(9));
     }
 
     @Test
     void processOrder_whenOrderQuantityBreakDownWithReminder2() {
-        OrderItem order = new OrderItem(4, "Test");
-        FilledOrderItem expected = new FilledOrderItem(order);
-        expected.addItem(new FilledOrderChildItem(2, new Bundle(3, 570)));
+        Map<Integer, Integer> result = staticProcessor.process(4, bundleList);
 
-        FilledOrderItem result = staticProcessor.processOrder(order, bundleSet);
-
-        assertEquals(expected.toString(), result.toString());
+        assertEquals(2, result.get(3));
+        assertEquals(0, result.get(5));
+        assertEquals(0, result.get(9));
     }
 }

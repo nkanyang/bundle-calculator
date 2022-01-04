@@ -5,14 +5,11 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import pers.bundlecalculator.config.IBundleConfig;
 import pers.bundlecalculator.exception.FormatNotSupportException;
-import pers.bundlecalculator.model.Bundle;
-import pers.bundlecalculator.model.FilledOrderItem;
-import pers.bundlecalculator.model.Order;
-import pers.bundlecalculator.model.OrderItem;
+import pers.bundlecalculator.model.*;
 import pers.bundlecalculator.processor.IBundleProcessor;
 
-import java.util.Iterator;
-import java.util.TreeSet;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @AllArgsConstructor
 public class BundleCalculator {
@@ -21,16 +18,25 @@ public class BundleCalculator {
     private final IBundleProcessor processor;
 
     public void processOrder(Order order) throws FormatNotSupportException {
-        Iterator<OrderItem> it = order.getIterator();
-        while (it.hasNext()) {
-            OrderItem orderItem = it.next();
-            logger.info("Processing order: Format code = {}, quantity = {} ", orderItem.getFormatCode(), orderItem.getQuantity());
-            TreeSet<Bundle> bundleSet = this.config.getBundles(orderItem.getFormatCode());
+        order.getItems().forEach(item -> {
+            FilledOrderItem filledOrderItem = new FilledOrderItem(item);
+            logger.info("Processing order: Format code = {}, quantity = {} ", item.getFormatCode(), item.getQuantity());
+
+            Map<Integer, Bundle> bundleSet = this.config.getBundles(item.getFormatCode());
             if (bundleSet == null) {
-                throw new FormatNotSupportException(orderItem.getFormatCode());
+                throw new FormatNotSupportException(item.getFormatCode());
             }
-            FilledOrderItem result = this.processor.processOrder(orderItem, bundleSet);
-            System.out.println(result);
-        }
+
+            Map<Integer, Integer> result = this.processor.process(item.getQuantity(),
+                    bundleSet.keySet().stream().collect(Collectors.toList()));
+            logger.debug("Result of processor: {}", result.toString());
+
+            result.entrySet().stream()
+                    .filter(e -> e.getValue() > 0)
+                    .sorted((b1, b2) -> - Integer.compare(b1.getKey(), b2.getKey()))
+                    .forEach( e -> filledOrderItem.addItem(new FilledOrderChildItem(e.getValue(), bundleSet.get(e.getKey()))));
+
+            System.out.println(filledOrderItem);
+        });
     }
 }

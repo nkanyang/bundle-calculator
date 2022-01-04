@@ -2,10 +2,10 @@ package pers.bundlecalculator.config;
 
 import pers.bundlecalculator.model.Bundle;
 
-import java.util.TreeSet;
+import java.util.Map;
 
 public interface IBundleConfig {
     void addBundle(String formatCode, Bundle bundle);
 
-    TreeSet<Bundle> getBundles(String formatCode);
+    Map getBundles(String formatCode);
 }

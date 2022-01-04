@@ -15,34 +15,43 @@ public class DpBundleProcessor implements IBundleProcessor {
     public static final Logger logger = LogManager.getLogger(DpBundleProcessor.class);
 
     @Override
-    public FilledOrderItem processOrder(OrderItem orderItem, TreeSet<Bundle> bundleSet) {
-        FilledOrderItem filledOrderItem = new FilledOrderItem(orderItem);
-        ArrayList<Integer> combination = this.process(orderItem.getQuantity(), bundleSet);
-        if (combination == null) {
-            filledOrderItem.addItem(new FilledOrderChildItem(1, bundleSet.first()));
-        } else {
-            Iterator<Bundle> bundleIt = bundleSet.descendingIterator();
-            int reminder = orderItem.getQuantity();
-            while (bundleIt.hasNext()) {
-                Bundle bundle = bundleIt.next();
-                int count = Collections.frequency(combination, bundle.getQuantity());
-                reminder -= count * bundle.getQuantity();
-                if (reminder > 0 && !bundleIt.hasNext()) {
-                    count++;
-                }
-                if (count > 0) {
-                    filledOrderItem.addItem(new FilledOrderChildItem(count, bundle));
-                }
-            }
-            logger.debug(Arrays.toString(combination.toArray()));
-        }
-        return filledOrderItem;
+    public Map<Integer, Integer> process(int quantity, List<Integer> bundles) {
+        Map<Integer, Integer> result = new HashMap<>();
+        ArrayList<Integer> combination = this.processDp(quantity, bundles);
+
+        return result;
     }
 
-    private ArrayList<Integer> process(int amount, TreeSet<Bundle> bundleSet) {
+
+//    @Override
+//    public FilledOrderItem processOrder(OrderItem orderItem, TreeSet<Bundle> bundleSet) {
+//        FilledOrderItem filledOrderItem = new FilledOrderItem(orderItem);
+//
+//        if (combination == null) {
+//            filledOrderItem.addItem(new FilledOrderChildItem(1, bundleSet.first()));
+//        } else {
+//            Iterator<Bundle> bundleIt = bundleSet.descendingIterator();
+//            int reminder = orderItem.getQuantity();
+//            while (bundleIt.hasNext()) {
+//                Bundle bundle = bundleIt.next();
+//                int count = Collections.frequency(combination, bundle.getQuantity());
+//                reminder -= count * bundle.getQuantity();
+//                if (reminder > 0 && !bundleIt.hasNext()) {
+//                    count++;
+//                }
+//                if (count > 0) {
+//                    filledOrderItem.addItem(new FilledOrderChildItem(count, bundle));
+//                }
+//            }
+//            logger.debug(Arrays.toString(combination.toArray()));
+//        }
+//        return filledOrderItem;
+//    }
+
+    private ArrayList<Integer> processDp(int amount, List<Integer> bundleSet) {
         int[] bundles = bundleSet.stream()
                 .filter(Objects::nonNull)
-                .mapToInt(Bundle::getQuantity)
+                .mapToInt(i -> i)
                 .toArray();
         int[] dp = new int[amount + 1];
         ArrayList<Integer>[] combination = new ArrayList[amount + 1];
@@ -65,4 +74,6 @@ public class DpBundleProcessor implements IBundleProcessor {
         }
         return null;
     }
+
+
 }
