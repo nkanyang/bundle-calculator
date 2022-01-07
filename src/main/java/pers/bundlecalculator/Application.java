@@ -3,7 +3,6 @@ package pers.bundlecalculator;
 import pers.bundlecalculator.config.IBundleConfig;
 import pers.bundlecalculator.model.Order;
 import pers.bundlecalculator.processor.DpBundleProcessor;
-import pers.bundlecalculator.processor.GreedyBundleProcessor;
 import pers.bundlecalculator.processor.IBundleProcessor;
 
 import java.io.File;
@@ -22,7 +21,7 @@ public class Application {
         }
         FileParser fileParser = new FileParser();
         IBundleConfig config = fileParser.parseBundleConfig(args[0]);
-        IBundleProcessor processor = new GreedyBundleProcessor();
+        IBundleProcessor processor = new DpBundleProcessor();
         BundleCalculator calculator = new BundleCalculator(config, processor);
 
         Order order = fileParser.parseOrder(args[1]);
