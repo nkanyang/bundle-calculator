@@ -3,7 +3,8 @@ package pers.bundlecalculator.config;
 import lombok.NoArgsConstructor;
 import pers.bundlecalculator.model.Bundle;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 @NoArgsConstructor
 public class BundleConfig implements IBundleConfig {
@@ -12,7 +13,7 @@ public class BundleConfig implements IBundleConfig {
     public void addBundle(String formatCode, Bundle bundle) {
         Map bundles = bundleSet.get(formatCode);
         if (bundles == null) {
-            bundles = new HashMap<>();;
+            bundles = new HashMap<>();
             bundleSet.put(formatCode, bundles);
         }
         bundles.put(bundle.getQuantity(), bundle);

@@ -5,7 +5,10 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import pers.bundlecalculator.config.IBundleConfig;
 import pers.bundlecalculator.exception.FormatNotSupportException;
-import pers.bundlecalculator.model.*;
+import pers.bundlecalculator.model.Bundle;
+import pers.bundlecalculator.model.FilledOrderChildItem;
+import pers.bundlecalculator.model.FilledOrderItem;
+import pers.bundlecalculator.model.Order;
 import pers.bundlecalculator.processor.IBundleProcessor;
 
 import java.util.Map;
@@ -33,8 +36,8 @@ public class BundleCalculator {
 
             result.entrySet().stream()
                     .filter(e -> e.getValue() > 0)
-                    .sorted((b1, b2) -> - Integer.compare(b1.getKey(), b2.getKey()))
-                    .forEach( e -> filledOrderItem.addItem(new FilledOrderChildItem(e.getValue(), bundleSet.get(e.getKey()))));
+                    .sorted((b1, b2) -> -Integer.compare(b1.getKey(), b2.getKey()))
+                    .forEach(e -> filledOrderItem.addItem(new FilledOrderChildItem(e.getValue(), bundleSet.get(e.getKey()))));
 
             System.out.println(filledOrderItem);
         });

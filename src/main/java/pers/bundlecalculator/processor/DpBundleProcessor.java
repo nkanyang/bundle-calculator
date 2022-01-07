@@ -1,79 +1,51 @@
 package pers.bundlecalculator.processor;
 
 import lombok.NoArgsConstructor;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import pers.bundlecalculator.model.Bundle;
-import pers.bundlecalculator.model.FilledOrderChildItem;
-import pers.bundlecalculator.model.FilledOrderItem;
-import pers.bundlecalculator.model.OrderItem;
 
-import java.util.*;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @NoArgsConstructor
 public class DpBundleProcessor implements IBundleProcessor {
-    public static final Logger logger = LogManager.getLogger(DpBundleProcessor.class);
 
     @Override
     public Map<Integer, Integer> process(int quantity, List<Integer> bundles) {
-        Map<Integer, Integer> result = new HashMap<>();
-        ArrayList<Integer> combination = this.processDp(quantity, bundles);
+        int smallest = bundles.stream()
+                .min(Comparator.comparing(Integer::valueOf))
+                .get();
 
-        return result;
-    }
+        Map<Integer, Integer>[] dp = new Map[quantity + 1];
+        for (int i = 0; i < quantity + 1; i++) {
+            dp[i] = new HashMap<>();
+            for (int bundleSize : bundles) {
+                dp[i].put(bundleSize, 0);
+            }
+        }
 
+        if (quantity <= smallest) {
+            dp[quantity].put(smallest, 1);
+            return dp[quantity];
+        }
 
-//    @Override
-//    public FilledOrderItem processOrder(OrderItem orderItem, TreeSet<Bundle> bundleSet) {
-//        FilledOrderItem filledOrderItem = new FilledOrderItem(orderItem);
-//
-//        if (combination == null) {
-//            filledOrderItem.addItem(new FilledOrderChildItem(1, bundleSet.first()));
-//        } else {
-//            Iterator<Bundle> bundleIt = bundleSet.descendingIterator();
-//            int reminder = orderItem.getQuantity();
-//            while (bundleIt.hasNext()) {
-//                Bundle bundle = bundleIt.next();
-//                int count = Collections.frequency(combination, bundle.getQuantity());
-//                reminder -= count * bundle.getQuantity();
-//                if (reminder > 0 && !bundleIt.hasNext()) {
-//                    count++;
-//                }
-//                if (count > 0) {
-//                    filledOrderItem.addItem(new FilledOrderChildItem(count, bundle));
-//                }
-//            }
-//            logger.debug(Arrays.toString(combination.toArray()));
-//        }
-//        return filledOrderItem;
-//    }
-
-    private ArrayList<Integer> processDp(int amount, List<Integer> bundleSet) {
-        int[] bundles = bundleSet.stream()
-                .filter(Objects::nonNull)
-                .mapToInt(i -> i)
-                .toArray();
-        int[] dp = new int[amount + 1];
-        ArrayList<Integer>[] combination = new ArrayList[amount + 1];
-        for (int i = 1; i < amount + 1; i++) {
-            dp[i] = amount + 1;
-            for (int j = 0; j < bundles.length; j++) {
-                if (i >= bundles[j] && dp[i] > dp[i - bundles[j]] + 1) {
-                    combination[i] = combination[i - bundles[j]] != null
-                            ? new ArrayList<>(combination[i - bundles[j]])
-                            : new ArrayList<>();
-                    combination[i].add(bundles[j]);
-                    dp[i] = dp[i - bundles[j]] + 1;
+        int[] value = new int[quantity + 1];
+        int i = 1;
+        for (; i <= smallest; i++) {
+            value[i] = 1;
+            dp[i].put(smallest, 1);
+        }
+        for (; i < quantity + 1; i++) {
+            value[i] = quantity + 1;
+            for (int j = 0; j < bundles.size(); j++) {
+                int bundleSize = bundles.get(j);
+                if (i >= bundleSize && value[i] > value[i - bundleSize] + 1) {
+                    dp[i] = new HashMap<>(dp[i - bundleSize]);
+                    dp[i].put(bundleSize, dp[i].get(bundleSize) + 1);
+                    value[i] = value[i - bundleSize] + 1;
                 }
             }
         }
-        for (int i = amount; i > 0; i--) {
-            if (combination[i] != null) {
-                return combination[i];
-            }
-        }
-        return null;
+        return dp[quantity];
     }
-
-
 }
